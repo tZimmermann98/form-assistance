@@ -26,7 +26,7 @@ inertia_config = InertiaConfig(
     manifest_json_path=_manifest_path,
     root_directory="src",
     entrypoint_filename="main.tsx",
-    assets_prefix="/assets" if settings.environment == "production" else "",
+    assets_prefix="/static" if settings.environment == "production" else "",
 )
 
 inertia_dependency = inertia_dependency_factory(inertia_config)
