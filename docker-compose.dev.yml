@@ -1,0 +1,63 @@
+services:
+  db:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: agentic_ms
+      POSTGRES_USER: agentic
+      POSTGRES_PASSWORD: agentic_dev
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agentic -d agentic_ms"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      DATABASE_URL: postgresql+asyncpg://agentic:agentic_dev@db:5432/agentic_ms
+      ENVIRONMENT: development
+      VITE_DEV_URL: http://localhost:5173
+      PLAYWRIGHT_RECORD: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8001:8001"
+    volumes:
+      - .:/app
+    environment:
+      DATABASE_URL: postgresql+asyncpg://agentic:agentic_dev@db:5432/agentic_ms
+      MCP_SERVER_PORT: "8001"
+      EXPLORER_HEADLESS: "true"
+    command: python -m mcp_server.server
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  pgdata:

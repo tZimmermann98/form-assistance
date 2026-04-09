@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <title>Testformular - Hundesteuer (Branching)</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .step { display: none; }
+        .step.active { display: block; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 4px; }
+        label .required { color: red; }
+        input, select, textarea { width: 300px; padding: 6px; }
+        button { padding: 8px 20px; margin-right: 10px; cursor: pointer; }
+        h1 { color: #333; }
+        h2 { color: #555; }
+        .error { color: red; display: none; margin-top: 5px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <!-- Step 1: Consent -->
+    <div class="step active" id="step1">
+        <h1>Hundesteuer</h1>
+        <h2>Einwilligungserklaerung</h2>
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="consent" id="consent_cb">
+                Ich habe die Datenschutzerklaerung gelesen und bin einverstanden <span class="required">*</span>
+            </label>
+            <div class="error" id="consent_error">Bitte stimmen Sie der Datenschutzerklaerung zu.</div>
+        </div>
+        <button type="button" onclick="validateAndNext(1)">Weiter</button>
+    </div>
+
+    <!-- Step 2: Choose action (BRANCH POINT) -->
+    <div class="step" id="step2">
+        <h1>Hundesteuer</h1>
+        <h2>Art des Anliegens</h2>
+        <div class="form-group">
+            <label for="anliegen">Was moechten Sie tun? <span class="required">*</span></label>
+            <select id="anliegen" name="anliegen" required>
+                <option value="">Bitte waehlen</option>
+                <option value="anmelden">Hund anmelden</option>
+                <option value="abmelden">Hund abmelden</option>
+            </select>
+            <div class="error" id="anliegen_error">Bitte waehlen Sie ein Anliegen.</div>
+        </div>
+        <div class="form-group">
+            <label for="halter_name">Name des Halters <span class="required">*</span></label>
+            <input type="text" id="halter_name" name="halter_name" required>
+            <div class="error" id="halter_error">Bitte geben Sie Ihren Namen ein.</div>
+        </div>
+        <button type="button" onclick="validateAndNext(2)">Zurueck</button>
+        <button type="button" onclick="validateAndNext(2, true)">Weiter</button>
+    </div>
+
+    <!-- Step 3a: Anmelden (registration) — different fields -->
+    <div class="step" id="step3a">
+        <h1>Hundesteuer - Anmeldung</h1>
+        <h2>Angaben zum neuen Hund</h2>
+        <div class="form-group">
+            <label for="hundename_a">Name des Hundes <span class="required">*</span></label>
+            <input type="text" id="hundename_a" name="hundename" required>
+        </div>
+        <div class="form-group">
+            <label for="rasse_a">Rasse <span class="required">*</span></label>
+            <input type="text" id="rasse_a" name="rasse" required>
+        </div>
+        <div class="form-group">
+            <label for="geburt_a">Geburtsdatum des Hundes</label>
+            <input type="text" id="geburt_a" name="geburtsdatum_hund" placeholder="TT.MM.JJJJ">
+        </div>
+        <div class="form-group">
+            <label for="chip_a">Chipnummer <span class="required">*</span></label>
+            <input type="text" id="chip_a" name="chipnummer" required>
+        </div>
+        <div class="form-group">
+            <label for="anmeldedatum">Anmeldedatum <span class="required">*</span></label>
+            <input type="text" id="anmeldedatum" name="anmeldedatum" placeholder="TT.MM.JJJJ" required>
+        </div>
+        <button type="button" onclick="showStep('step2')">Zurueck</button>
+        <button type="button" onclick="showStep('step4')">Weiter</button>
+    </div>
+
+    <!-- Step 3b: Abmelden (deregistration) — different fields -->
+    <div class="step" id="step3b">
+        <h1>Hundesteuer - Abmeldung</h1>
+        <h2>Angaben zum abzumeldenden Hund</h2>
+        <div class="form-group">
+            <label for="steuernr">Steuernummer <span class="required">*</span></label>
+            <input type="text" id="steuernr" name="steuernummer" required>
+        </div>
+        <div class="form-group">
+            <label for="hundename_b">Name des Hundes <span class="required">*</span></label>
+            <input type="text" id="hundename_b" name="hundename" required>
+        </div>
+        <div class="form-group">
+            <label for="abmeldedatum">Abmeldedatum <span class="required">*</span></label>
+            <input type="text" id="abmeldedatum" name="abmeldedatum" placeholder="TT.MM.JJJJ" required>
+        </div>
+        <div class="form-group">
+            <label for="grund">Grund der Abmeldung <span class="required">*</span></label>
+            <select id="grund" name="grund" required>
+                <option value="">Bitte waehlen</option>
+                <option value="umzug">Umzug</option>
+                <option value="abgabe">Abgabe des Hundes</option>
+                <option value="tod">Tod des Hundes</option>
+            </select>
+        </div>
+        <button type="button" onclick="showStep('step2')">Zurueck</button>
+        <button type="button" onclick="showStep('step4')">Weiter</button>
+    </div>
+
+    <!-- Step 4: Summary -->
+    <div class="step" id="step4">
+        <h1>Hundesteuer</h1>
+        <h2>Zusammenfassung</h2>
+        <p>Bitte pruefen Sie Ihre Angaben und drucken Sie das Formular aus.</p>
+        <button type="button" onclick="history.back()">Zurueck</button>
+    </div>
+
+    <script>
+        function showStep(id) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function validateAndNext(currentStep, forward) {
+            // Hide all errors
+            document.querySelectorAll('.error').forEach(e => e.style.display = 'none');
+
+            if (currentStep === 1) {
+                if (forward !== false) {
+                    var cb = document.getElementById('consent_cb');
+                    if (!cb.checked) {
+                        document.getElementById('consent_error').style.display = 'block';
+                        return;
+                    }
+                    showStep('step2');
+                }
+            } else if (currentStep === 2) {
+                if (forward) {
+                    var anliegen = document.getElementById('anliegen').value;
+                    var name = document.getElementById('halter_name').value;
+                    if (!anliegen) {
+                        document.getElementById('anliegen_error').style.display = 'block';
+                        return;
+                    }
+                    if (!name) {
+                        document.getElementById('halter_error').style.display = 'block';
+                        return;
+                    }
+                    // BRANCH: different next step based on selection
+                    if (anliegen === 'anmelden') {
+                        showStep('step3a');
+                    } else if (anliegen === 'abmelden') {
+                        showStep('step3b');
+                    }
+                } else {
+                    showStep('step1');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

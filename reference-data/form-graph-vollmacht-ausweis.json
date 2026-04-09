@@ -1,0 +1,194 @@
+{
+  "_comment": "Reference form graph for Vollmacht zur Abholung eines Ausweises / Passes. source_url is the real city URL for reference only — must NOT be hit in CI/automated tests.",
+  "steps": [
+    {
+      "step": 1,
+      "id": "consent",
+      "title": "Einwilligungserklaerung",
+      "description": "Datenschutz- und Einwilligungserklaerung fuer die Online-Bearbeitung",
+      "sections": [
+        {
+          "section": "Datenschutzhinweis",
+          "group_rule": null,
+          "fields": [
+            {
+              "label": "Ich habe die Datenschutzerklaerung gelesen und bin einverstanden",
+              "type": "checkbox",
+              "required": true,
+              "help": "Sie muessen der Datenschutzerklaerung zustimmen, um fortzufahren."
+            }
+          ]
+        }
+      ],
+      "navigation": {
+        "next": "vollmachtgebende_person",
+        "back": null
+      }
+    },
+    {
+      "step": 2,
+      "id": "vollmachtgebende_person",
+      "title": "Vollmachtgebende Person",
+      "description": "Daten der Person, die die Vollmacht erteilt (Ausweisinhaber/in)",
+      "sections": [
+        {
+          "section": "Persoenliche Daten",
+          "group_rule": null,
+          "fields": [
+            {
+              "label": "Anrede",
+              "type": "select",
+              "required": true,
+              "options": ["Herr", "Frau", "Divers"]
+            },
+            {
+              "label": "Vorname",
+              "type": "text",
+              "required": true
+            },
+            {
+              "label": "Nachname",
+              "type": "text",
+              "required": true
+            },
+            {
+              "label": "Geburtsdatum",
+              "type": "date",
+              "required": true,
+              "format": "DD.MM.YYYY"
+            }
+          ]
+        },
+        {
+          "section": "Adresse",
+          "group_rule": null,
+          "fields": [
+            {
+              "label": "Strasse und Hausnummer",
+              "type": "text",
+              "required": true
+            },
+            {
+              "label": "Postleitzahl",
+              "type": "text",
+              "required": true
+            },
+            {
+              "label": "Ort",
+              "type": "text",
+              "required": true
+            }
+          ]
+        },
+        {
+          "section": "Kontakt",
+          "group_rule": "at_least_one_required",
+          "fields": [
+            {
+              "label": "Telefonnummer",
+              "type": "text",
+              "required": false,
+              "help": "Mindestens Telefonnummer oder E-Mail-Adresse angeben"
+            },
+            {
+              "label": "E-Mail-Adresse",
+              "type": "email",
+              "required": false,
+              "help": "Mindestens Telefonnummer oder E-Mail-Adresse angeben"
+            }
+          ]
+        }
+      ],
+      "navigation": {
+        "next": "bevollmaechtigte_person",
+        "back": "consent"
+      }
+    },
+    {
+      "step": 3,
+      "id": "bevollmaechtigte_person",
+      "title": "Bevollmaechtigte Person",
+      "description": "Daten der Person, die den Ausweis / Pass abholen soll",
+      "sections": [
+        {
+          "section": "Persoenliche Daten",
+          "group_rule": null,
+          "fields": [
+            {
+              "label": "Anrede",
+              "type": "select",
+              "required": true,
+              "options": ["Herr", "Frau", "Divers"]
+            },
+            {
+              "label": "Vorname",
+              "type": "text",
+              "required": true
+            },
+            {
+              "label": "Nachname",
+              "type": "text",
+              "required": true
+            },
+            {
+              "label": "Geburtsdatum",
+              "type": "date",
+              "required": true,
+              "format": "DD.MM.YYYY"
+            }
+          ]
+        },
+        {
+          "section": "Ausweis der bevollmaechtigten Person",
+          "group_rule": null,
+          "fields": [
+            {
+              "label": "Art des Ausweisdokuments",
+              "type": "select",
+              "required": true,
+              "options": ["Personalausweis", "Reisepass"]
+            },
+            {
+              "label": "Ausweisnummer",
+              "type": "text",
+              "required": true
+            }
+          ]
+        }
+      ],
+      "navigation": {
+        "next": "bevollmaechtigung",
+        "back": "vollmachtgebende_person"
+      }
+    },
+    {
+      "step": 4,
+      "id": "bevollmaechtigung",
+      "title": "Bevollmaechtigung",
+      "description": "Angaben zum abzuholenden Dokument und zur Bevollmaechtigung",
+      "sections": [
+        {
+          "section": "Abzuholendes Dokument",
+          "group_rule": null,
+          "fields": [
+            {
+              "label": "Art des abzuholenden Dokuments",
+              "type": "select",
+              "required": true,
+              "options": ["Personalausweis", "Reisepass", "Kinderreisepass"]
+            }
+          ]
+        }
+      ],
+      "navigation": {
+        "next": null,
+        "back": "bevollmaechtigte_person"
+      }
+    }
+  ],
+  "outcome": {
+    "type": "print_and_sign",
+    "description": "Die ausgefuellte Vollmacht wird als PDF generiert. Sie muss ausgedruckt, unterschrieben und bei der Abholung vorgelegt werden.",
+    "submission_mode": "offline"
+  }
+}

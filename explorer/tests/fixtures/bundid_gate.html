@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <title>Testformular - BundID Gate</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .auth-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+        button { padding: 10px 20px; margin: 10px 5px; cursor: pointer; }
+        .bundid-btn { background: #003366; color: white; }
+        .anon-btn { background: #666; color: white; }
+        .step { display: none; }
+        .step.active { display: block; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 4px; }
+        input, select { width: 300px; padding: 6px; }
+        .conditional { display: none; margin-top: 10px; padding: 10px; background: #f5f5f5; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <!-- Step 0: BundID Gate -->
+    <div class="step active" id="step0">
+        <h1>Verlustanzeige Personalausweis</h1>
+        <h2>Anmeldung</h2>
+        <p>Sie koennen dieses Formular mit oder ohne BundID ausfuellen.</p>
+        <div class="auth-section">
+            <h3>Mit BundID anmelden</h3>
+            <p>Nutzen Sie Ihre BundID fuer die digitale Identifizierung.</p>
+            <button class="bundid-btn" onclick="alert('BundID not available')">Mit BundID anmelden</button>
+        </div>
+        <div class="auth-section">
+            <h3>Ohne Anmeldung fortfahren</h3>
+            <p>Fuellen Sie das Formular ohne digitale Identifizierung aus.</p>
+            <button class="anon-btn" onclick="nextStep(1)">Weiter ohne Anmeldung</button>
+        </div>
+    </div>
+
+    <!-- Step 1: Form with conditional logic -->
+    <div class="step" id="step1">
+        <h1>Verlustanzeige Personalausweis</h1>
+        <h2>Angaben zum Verlust</h2>
+
+        <div class="form-group">
+            <label for="vorname">Vorname *</label>
+            <input type="text" id="vorname" name="vorname" required>
+        </div>
+        <div class="form-group">
+            <label for="nachname">Nachname *</label>
+            <input type="text" id="nachname" name="nachname" required>
+        </div>
+
+        <div class="form-group">
+            <label>Wurde eine Verlustanzeige bei der Polizei erstattet? *</label>
+            <div>
+                <label><input type="radio" name="polizei" value="ja" onchange="togglePolizei(this.value)"> Ja</label>
+                <label><input type="radio" name="polizei" value="nein" onchange="togglePolizei(this.value)"> Nein</label>
+            </div>
+        </div>
+
+        <div class="conditional" id="polizei-ja">
+            <div class="form-group">
+                <label for="aktenzeichen">Aktenzeichen der Polizei</label>
+                <input type="text" id="aktenzeichen" name="aktenzeichen">
+            </div>
+            <div class="form-group">
+                <label for="dienststelle">Dienststelle</label>
+                <input type="text" id="dienststelle" name="dienststelle">
+            </div>
+        </div>
+
+        <div class="conditional" id="polizei-nein">
+            <p><strong>Hinweis:</strong> Sie muessen vor der Beantragung eines neuen Ausweises eine Verlustanzeige bei der Polizei erstatten.</p>
+        </div>
+
+        <button type="button" onclick="nextStep(0)">Zurueck</button>
+        <button type="button" onclick="nextStep(2)">Weiter</button>
+    </div>
+
+    <!-- Step 2: Summary -->
+    <div class="step" id="step2">
+        <h1>Verlustanzeige Personalausweis</h1>
+        <h2>Zusammenfassung</h2>
+        <p>Bitte pruefen Sie Ihre Angaben und drucken Sie das Formular aus.</p>
+        <button type="button" onclick="nextStep(1)">Zurueck</button>
+    </div>
+
+    <script>
+        function nextStep(n) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + n).classList.add('active');
+        }
+        function togglePolizei(val) {
+            document.getElementById('polizei-ja').style.display = val === 'ja' ? 'block' : 'none';
+            document.getElementById('polizei-nein').style.display = val === 'nein' ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>
