@@ -39,6 +39,15 @@ def create_app() -> FastAPI:
             allow_headers=["*"],
         )
 
+    # Serve built frontend assets in production
+    if settings.environment == "production":
+        import os
+        from fastapi.staticfiles import StaticFiles
+
+        dist_dir = os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "dist")
+        if os.path.isdir(dist_dir):
+            app.mount("/assets", StaticFiles(directory=os.path.join(dist_dir, "assets")), name="static")
+
     # Inertia exception handlers
     app.add_exception_handler(
         InertiaVersionConflictException,
