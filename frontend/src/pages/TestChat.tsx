@@ -48,7 +48,7 @@ export default function TestChat({
     for (const file of Array.from(files)) {
       const reader = new FileReader()
       reader.onload = () => {
-        const base64 = (reader.result as string).split(',')[1]
+        const base64 = (reader.result as string).split(',')[1] || ''
         setAttachments((prev) => [...prev, { name: file.name, base64 }])
       }
       reader.readAsDataURL(file)

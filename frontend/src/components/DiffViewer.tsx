@@ -60,7 +60,7 @@ const CHANGE_COLORS: Record<string, string> = {
 
 export default function DiffViewer({ diff, onAccept }: DiffViewerProps) {
   const [expanded, setExpanded] = useState(false)
-  const style = SEVERITY_STYLES[diff.severity] || SEVERITY_STYLES.cosmetic
+  const style = (SEVERITY_STYLES[diff.severity] || SEVERITY_STYLES.cosmetic)!
 
   const totalChanges = diff.field_changes.length + diff.step_changes.length
 

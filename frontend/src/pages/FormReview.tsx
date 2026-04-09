@@ -40,6 +40,7 @@ interface Outcome {
 interface GraphData {
   steps: Step[]
   outcome: Outcome
+  exploration_type?: 'linear' | 'branching'
 }
 
 interface FormData {

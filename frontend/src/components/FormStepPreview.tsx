@@ -67,7 +67,7 @@ export default function FormStepPreview({ step }: FormStepPreviewProps) {
 
   // Special step types (auth gate, info page, final page)
   if (step.step_type && STEP_TYPE_STYLES[step.step_type]) {
-    const style = STEP_TYPE_STYLES[step.step_type]
+    const style = STEP_TYPE_STYLES[step.step_type]!
     return (
       <div>
         <div className="mb-6">

@@ -81,7 +81,8 @@ function ConfigSection({
 
 export default function ConnectGuide({
   mcpUrl,
-  hostname,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  hostname: _,
   tools,
 }: ConnectGuideProps) {
   return (
