@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     # MCP server
     mcp_server_port: int = 8001
 
-    model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+    model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
 
 
 settings = Settings()
